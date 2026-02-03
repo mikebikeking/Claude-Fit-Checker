@@ -8,7 +8,7 @@ A React + Vite application for evaluating Claude API fit for your use case, with
 
 ## About This Project
 
-I built Claude Fit-Check to demonstrate how I approach technical advisory work. As a Solutions Engineer candidate at Anthropic, I recognize that effective customer guidance isn't always about making the sale—it's about honestly assessing fit.
+I built Claude Fit-Check to demonstrate how I approach technical advisory work. I recognize that effective customer guidance isn't always about making the sale—it's about honestly assessing fit.
 
 This tool evaluates whether Claude API is the right choice for a company's specific constraints: use case suitability, scale feasibility, latency match, cost-effectiveness, and compliance capabilities. Sometimes the answer is "excellent fit." Often, it's "not recommended" or "hybrid approach needed."
 
