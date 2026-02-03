@@ -2,6 +2,20 @@
 
 A React + Vite application for evaluating Claude API fit for your use case, with an Express backend that uses Claude AI to provide intelligent assessments.
 
+## 🌐 Live Preview
+
+**[View Live Demo](https://claude-fit-checker.vercel.app/)**
+
+## About This Project
+
+I built Claude Fit-Check to demonstrate how I approach technical advisory work. As a Solutions Engineer candidate at Anthropic, I recognize that effective customer guidance isn't always about making the sale—it's about honestly assessing fit.
+
+This tool evaluates whether Claude API is the right choice for a company's specific constraints: use case suitability, scale feasibility, latency match, cost-effectiveness, and compliance capabilities. Sometimes the answer is "excellent fit." Often, it's "not recommended" or "hybrid approach needed."
+
+**Why this matters**: Solutions engineers need to understand customer problems deeply and be honest about trade-offs. This project demonstrates that thinking.
+
+**Tech**: React + Vite frontend, Express backend with Claude API integration, deployed on Vercel.
+
 ## Features
 
 - **Interactive Form**: Collects use case, scale, latency, budget, and compliance requirements
@@ -147,6 +161,4 @@ npm run dev
 npm run dev
 ```
 
-## License
 
-MIT
