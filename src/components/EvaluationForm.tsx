@@ -84,7 +84,7 @@ export function EvaluationForm({ onSubmit, onError }: EvaluationFormProps) {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 second timeout
       
-      const response = await fetch('http://localhost:5000/api/evaluate', {
+      const response = await fetch('/api/evaluate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -129,7 +129,7 @@ export function EvaluationForm({ onSubmit, onError }: EvaluationFormProps) {
       onSubmit(data, assessment);
     } catch (error) {
       console.error('Evaluation error:', error);
-      let errorMessage = 'Failed to evaluate request. Please ensure the backend server is running.';
+      let errorMessage = 'Failed to evaluate request. Please try again.';
       
       if (error instanceof Error) {
         if (error.name === 'AbortError') {

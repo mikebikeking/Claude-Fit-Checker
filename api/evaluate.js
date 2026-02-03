@@ -1,29 +1,21 @@
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
 import Anthropic from '@anthropic-ai/sdk';
-
-dotenv.config();
-
-const app = express();
-const PORT = process.env.PORT || 5000;
-
-// Middleware
-app.use(cors());
-app.use(express.json());
 
 // Initialize Anthropic client
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
-// Evaluation endpoint
-app.post('/api/evaluate', async (req, res) => {
+export default async function handler(req, res) {
+  // Only allow POST requests
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
   try {
     // Check if API key is configured
     if (!process.env.ANTHROPIC_API_KEY) {
       return res.status(500).json({
-        error: 'ANTHROPIC_API_KEY is not configured. Please add it to your .env file.',
+        error: 'ANTHROPIC_API_KEY is not configured. Please add it to your environment variables.',
       });
     }
 
@@ -66,7 +58,7 @@ Be specific, practical, and actionable in your assessment.`;
 
     // Call Claude API
     const message = await anthropic.messages.create({
-    model: "claude-sonnet-4-5-20250929",
+      model: "claude-sonnet-4-5-20250929",
       max_tokens: 1000,
       messages: [
         {
@@ -126,7 +118,7 @@ Be specific, practical, and actionable in your assessment.`;
       assessment.nextSteps = [];
     }
 
-    res.json(assessment);
+    return res.status(200).json(assessment);
   } catch (error) {
     console.error('Error evaluating request:', error);
     console.error('Error stack:', error.stack);
@@ -140,7 +132,7 @@ Be specific, practical, and actionable in your assessment.`;
     // Check if API key is missing
     if (!process.env.ANTHROPIC_API_KEY) {
       return res.status(500).json({
-        error: 'ANTHROPIC_API_KEY is not set. Please add it to your .env file.',
+        error: 'ANTHROPIC_API_KEY is not set. Please add it to your environment variables.',
       });
     }
     
@@ -184,34 +176,10 @@ Be specific, practical, and actionable in your assessment.`;
     
     // Always include details in development, or if it's a known API error
     const isDevelopment = process.env.NODE_ENV !== 'production';
-    res.status(500).json({
+    return res.status(500).json({
       error: 'Failed to evaluate request. Please try again.',
       ...(isDevelopment && { details: errorDetails }),
       ...(error.status && { apiStatus: error.status }),
     });
   }
-});
-
-// Root endpoint
-app.get('/', (req, res) => {
-  res.json({
-    message: 'Claude Fit-Check API Server',
-    version: '1.0.0',
-    endpoints: {
-      health: '/api/health',
-      evaluate: '/api/evaluate (POST)',
-    },
-    status: 'running',
-  });
-});
-
-// Health check endpoint
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
-});
-
-app.listen(PORT, () => {
-  if (!process.env.ANTHROPIC_API_KEY) {
-    console.warn('⚠️  WARNING: ANTHROPIC_API_KEY not set. Please add it to your .env file.');
-  }
-});
+}
