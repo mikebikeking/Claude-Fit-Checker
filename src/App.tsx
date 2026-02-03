@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { Loader2 } from 'lucide-react';
 import { Hero3D } from './components/Hero3D';
 import { EvaluationForm, FormData, AssessmentResponse } from './components/EvaluationForm';
 import { AssessmentResult } from './components/AssessmentResult';
@@ -8,8 +9,10 @@ export function App() {
   const [formData, setFormData] = useState<FormData | null>(null);
   const [assessment, setAssessment] = useState<AssessmentResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   
   const handleFormSubmit = (data: FormData, assessmentData: AssessmentResponse) => {
+    setIsLoading(false);
     setFormData(data);
     setAssessment(assessmentData);
     setError(null);
@@ -17,6 +20,7 @@ export function App() {
   };
   
   const handleError = (errorMessage: string) => {
+    setIsLoading(false);
     setError(errorMessage);
   };
   
@@ -45,7 +49,7 @@ export function App() {
           </div>
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-white">
             Claude{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
+            <span className="text-blue-400">
               Fit-Check
             </span>
           </h1>
@@ -78,6 +82,34 @@ export function App() {
           }
         </AnimatePresence>
 
+        {/* Loading Overlay */}
+        <AnimatePresence>
+          {isLoading && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 flex items-center justify-center bg-bg/95 backdrop-blur-sm">
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                className="flex flex-col items-center justify-center space-y-6">
+                <div className="relative">
+                  <Loader2 className="w-16 h-16 text-blue-400 animate-spin" />
+                  <div className="absolute inset-0 w-16 h-16 border-4 border-blue-400/20 rounded-full" />
+                </div>
+                <div className="text-center space-y-2">
+                  <h2 className="text-2xl font-bold text-white">Analyzing Fit</h2>
+                  <p className="text-text-muted text-sm max-w-md">
+                    Evaluating your use case against Claude API capabilities...
+                  </p>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col items-center justify-center w-full max-w-4xl mx-auto">
           {step === 'form' ? (
@@ -87,7 +119,11 @@ export function App() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
               className="w-full glass-panel rounded-2xl p-6 md:p-10 shadow-2xl shadow-black/50">
-              <EvaluationForm onSubmit={handleFormSubmit} onError={handleError} />
+              <EvaluationForm 
+                onSubmit={handleFormSubmit} 
+                onError={handleError}
+                onLoadingChange={setIsLoading}
+              />
               {error && (
                 <div className="mt-4 p-4 bg-error/10 border border-error/20 rounded-lg text-error text-sm">
                   {error}
@@ -114,7 +150,7 @@ export function App() {
 
         {/* Footer */}
         <footer className="mt-20 text-center text-xs text-text-muted/40 font-mono">
-          <p>ENGINEERED FOR PRECISION • V1.0.4</p>
+          <p>ENGINEERED FOR PRECISION • © Mike King 2026</p>
         </footer>
       </main>
     </div>);

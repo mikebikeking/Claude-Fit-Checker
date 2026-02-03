@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { Button } from './ui/Button';
@@ -24,6 +24,7 @@ export interface AssessmentResponse {
 interface EvaluationFormProps {
   onSubmit: (data: FormData, assessment: AssessmentResponse) => void;
   onError?: (error: string) => void;
+  onLoadingChange?: (isLoading: boolean) => void;
 }
 const USE_CASES = [
 {
@@ -65,7 +66,7 @@ const LATENCY_OPTIONS = [
   label: 'Async'
 }];
 
-export function EvaluationForm({ onSubmit, onError }: EvaluationFormProps) {
+export function EvaluationForm({ onSubmit, onError, onLoadingChange }: EvaluationFormProps) {
   const [data, setData] = useState<FormData>({
     useCase: '',
     scale: 100000,
@@ -78,6 +79,7 @@ export function EvaluationForm({ onSubmit, onError }: EvaluationFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    onLoadingChange?.(true);
     
     try {
       // Add timeout to prevent hanging
@@ -146,6 +148,7 @@ export function EvaluationForm({ onSubmit, onError }: EvaluationFormProps) {
       }
     } finally {
       setIsSubmitting(false);
+      onLoadingChange?.(false);
     }
   };
   const formatScale = (val: number) => {
